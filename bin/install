@@ -1,0 +1,68 @@
+#!/usr/bin/env bash
+
+set -euo pipefail
+
+install_tool() {
+    local version="$2"
+    local install_path="$3"
+    local tmp_download_dir="$4"
+    local binary_name="$5"
+
+    local platform
+    local arch_name
+    local bin_install_path="${install_path}/bin"
+    local binary_path="${bin_install_path}/${binary_name}"
+    local download_url
+    local download_path
+
+    platform=$(get_platform)
+    arch_name=$(get_arch)
+    download_url=$(get_download_url "${version}" "${platform}" "${arch_name}")
+    download_path="${tmp_download_dir}/${binary_name}"
+
+    echo "Downloading [${binary_name}] from ${download_url} to ${download_path}"
+    curl -sSL -o "${download_path}" "${download_url}"
+
+    echo "Creating bin directory"
+    mkdir -p "${bin_install_path}"
+
+    echo "Cleaning previous binaries"
+    rm -f "${binary_path}" 2>/dev/null || true
+
+    echo "Copying binary"
+    cp "${tmp_download_dir}/${binary_name}" "${binary_path}"
+    chmod +x "${binary_path}"
+}
+
+get_platform() {
+    uname | tr '[:upper:]' '[:lower:]'
+}
+
+get_arch() {
+    local arch
+    if [ "$(uname -m)" = "x86_64" ]; then
+        arch="amd64"
+    elif [ "$(uname -m)" = "aarch64" ]; then
+        arch="arm"
+    else
+        arch="386"
+    fi
+
+    echo "${arch}"
+}
+
+get_download_url() {
+    local version="$1"
+    local platform="$2"
+    local arch_name="$3"
+
+    local github_repo="rakyll/hey"
+
+    echo "https://gobinaries.com/binary/github.com/${github_repo}?os=${platform}&arch=${arch_name}&version=${version}"
+}
+
+tmp_download_dir="$(mktemp -d -t 'asdf_XXXXXXXX')"
+trap 'rm -rf "${tmp_download_dir}"' EXIT
+install_tool "$ASDF_INSTALL_TYPE" "$ASDF_INSTALL_VERSION" "$ASDF_INSTALL_PATH" "$tmp_download_dir" hey
+
+# vim:fenc=utf-8 ff=unix ft=bash ts=4 sw=4 sts=4 si et
