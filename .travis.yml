@@ -1,0 +1,15 @@
+language: c
+env:
+  - HEY_NAME=hey HEY_VERSION=v0.1.4 TEST_COMMAND='hey --version'
+before_script:
+  - git clone https://github.com/asdf-vm/asdf.git
+  - . asdf/asdf.sh
+script:
+  - make test
+  - asdf plugin-add $HEY_NAME ./
+  - asdf list-all $HEY_NAME
+  - asdf plugin-test $HEY_NAME ./ "$TEST_COMMAND" --asdf-tool-version $HEY_VERSION
+matrix:
+  include:
+   - os: linux
+     arch: amd64
