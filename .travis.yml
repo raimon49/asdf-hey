@@ -1,6 +1,6 @@
 language: c
 env:
-  - HEY_NAME=hey HEY_VERSION=v0.1.4 TEST_COMMAND='hey --version'
+  - HEY_NAME=hey HEY_VERSION=v0.1.4 TEST_COMMAND='hey --help'
 before_script:
   - git clone https://github.com/asdf-vm/asdf.git
   - . asdf/asdf.sh
@@ -12,4 +12,6 @@ script:
 matrix:
   include:
    - os: linux
+     arch: amd64
+   - os: osx
      arch: amd64
