@@ -8,7 +8,7 @@
 ## Installation
 
 ```bash
-$ asdf plugin add hey https://github.com/raimon49/asdf-hey.git
+$ asdf plugin add hey
 ```
 
 ## Usage
