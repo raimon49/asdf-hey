@@ -15,12 +15,10 @@ $ asdf plugin add hey
 
 ```bash
 # Install any version of hey
-$ asdf install hey v0.1.4
+$ asdf install hey 0.1.4
 
 # Set the version of hey you want
-$ asdf global hey v0.1.4
-$ hey --version
-hey version v0.1.4
+$ asdf global hey 0.1.4
 ```
 
 ## License
